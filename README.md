@@ -1,2 +1,2 @@
 # kafka_streaming_hotel_reviews
-Data streaming app with hotel reviews dataset
+Coursework for NYP PDC in Enterprise Data Management (2026)
