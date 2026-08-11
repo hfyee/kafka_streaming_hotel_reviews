@@ -18,7 +18,7 @@ CREATE STREAM reviews_stream_bronze (
     reviews_user_city VARCHAR,
     reviews_username VARCHAR
 ) WITH (
-    KAFKA_TOPIC='hotel_reviews_topic',
+    KAFKA_TOPIC='US_hotel_reviews',
     VALUE_FORMAT='JSON'
 );
 
@@ -54,7 +54,7 @@ SELECT
     LATEST_BY_OFFSET(hotel_name) AS hotel_name,
     LATEST_BY_OFFSET(city) AS city,
     LATEST_BY_OFFSET(state) AS state,
-    LATEST_OFFSET(postal_code) AS postal_code,
+    LATEST_BY_OFFSET(postal_code) AS postal_code,
     LATEST_BY_OFFSET(categories) AS categories,
     AVG(CAST(reviews_rating AS DOUBLE)) AS avg_rating,
     COUNT(*) AS total_reviews,
