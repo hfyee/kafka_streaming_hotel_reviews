@@ -85,6 +85,8 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 1
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
+    volumes:
+      - .:/ksql-scripts   # Maps host current folder '.' to '/ksql-scripts' inside container
 
   rest-proxy:
     image: confluentinc/cp-kafka-rest:8.2.0
