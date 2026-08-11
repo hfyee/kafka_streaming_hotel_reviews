@@ -1,0 +1,189 @@
+{
+  "type": "record",
+  "name": "hotel_reviews",
+  "namespace": "streams",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "[A][VW][A-Za-z0-9]{18}"
+        }
+      }
+    },
+    {
+      "name": "address",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "[1-9][0-9]{1,4} [A-Z][a-z]+ (St|Ave|Blvd|Rd|Dr)"
+        }
+      }
+    },
+    {
+      "name": "categories",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "arg.properties": {
+        "options": [
+          ["Hotels", "Resorts", "Lodging"],
+          ["Hotels", "Bed & Breakfast", "Inns"],
+          ["Hotels", "Suites", "Extended Stay"],
+          ["Hotels", "Banquet facilities", "Corporate Lodging"],
+          ["Hotels", "Motels", "Lodging"],
+          ["Business Hotels", "Conference Room", "Golf Courses"],
+          ["Tourist Hotels", "Family-friendly Hotels", "Weekend Gateway Hotels"]
+        ]
+      }
+    },
+    {
+      "name": "primary_categories",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "arg.properties": {
+        "options": [
+          ["Accommodation & Food Services"],
+          ["Travel & Tourism"]
+        ]
+      }
+    },
+    {
+      "name": "city",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["San Francisco", "New York", "Chicago", "Miami", "Las Vegas", 
+            "Woodstock", "Wichita", "Virginia Beach", "Vancouver", "Utah",
+            "Union Dale", "Tucson", "Tarpon Springs", "Sunnyvale", "Springfield",
+            "South Lake Tahoe", "Simpsonville", "San Diego", "San Jose",
+            "Richmond", "Princeton", "Portland", "Pittsburgh", "Philadelphia",
+            "Orlando", "Oxford", "Oklahoma City", "Norfolk", "Newport", "New Orleans",
+            "Nashville", "Minneapolis", "Los Angeles", "Kansas City", "Ithaca",
+            "Jacksonville", "Indiana", "Houston", "Greenville", "Freeport", "Fremont",
+            "Denver", "Columbia", "Cleveland", "Bradford", "Boise", "Baltimore", 
+            "Arlington", "Arkansas City", "Albuquerque"]
+        }
+      }
+    },
+    {
+      "name": "country",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["US"]
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": {
+        "type": "double",
+        "arg.properties": {
+          "range": { "min": 25.0, "max": 48.0 }
+        }
+      }
+    },
+    {
+      "name": "longitude",
+      "type": {
+        "type": "double",
+        "arg.properties": {
+          "range": { "min": -122.0, "max": -73.0 }
+        }
+      }
+    },
+    {
+      "name": "name",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["Grand Plaza Hotel", "Seaside Resort", "Central Park Suites", "Sunrise Inn", "Metropolitan Lodge"]
+        }
+      }
+    },
+    {
+      "name": "postal_code",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "[1-9][0-9]{4}"
+        }
+      }
+    },
+    {
+      "name": "province",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["CA", "NY", "IL", "FL", "NV"]
+        }
+      }
+    },
+    {
+      "name": "reviews_date",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis",
+        "arg.properties": {
+          "range": { "min": 1009843200000, "max": 1546291199000 }
+        }
+      }
+    },
+    {
+      "name": "reviews_rating",
+      "type": {
+        "type": "int",
+        "arg.properties": {
+          "range": { "min": 1, "max": 5 }
+        }
+      }
+    },
+    {
+      "name": "reviews_text",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "Great stay! Room was clean and staff was very polite.",
+            "Average experience. The air conditioning was noisy.",
+            "Wonderful location close to downtown attractions.",
+            "Disappointing service at check-in, but rooms were nice.",
+            "Highly recommended! Will definitely visit again."
+          ]
+        }
+      }
+    },
+    {
+      "name": "reviews_title",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["Awesome experience!", "Could be better", "Great location", "Decent stay", "Loved it!"]
+        }
+      }
+    },
+    {
+      "name": "reviews_user_city",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": ["Seattle", "Austin", "Boston", "Denver", "Atlanta"]
+        }
+      }
+    },
+    {
+      "name": "reviews_username",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "regex": "(Anonymous|[A-Za-z][A-Za-z0-9]+)"
+        }
+      }
+    }
+  ]
+}
