@@ -1,5 +1,5 @@
 -- raw event stream 
-CREATE STREAM reviews_stream_bronze (
+CREATE STREAM IF NOT EXISTS reviews_stream_bronze (
     id VARCHAR KEY,
     address VARCHAR,
     categories ARRAY<STRING>,
@@ -23,7 +23,7 @@ CREATE STREAM reviews_stream_bronze (
 );
 
 -- filtered event stream
-CREATE STREAM reviews_stream_silver AS 
+CREATE STREAM IF NOT EXISTS reviews_stream_silver AS 
 SELECT
     id AS hotel_id,
     address,
@@ -48,7 +48,7 @@ WHERE id IS NOT NULL
     AND reviews_text IS NOT NULL;
 
 -- materialised state table derived from silver stream
-CREATE TABLE hotel_summary_gold AS 
+CREATE TABLE IF NOT EXISTS hotel_summary_gold AS 
 SELECT
     hotel_id,
     LATEST_BY_OFFSET(hotel_name) AS hotel_name,
