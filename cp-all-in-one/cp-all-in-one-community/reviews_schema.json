@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "hotel_reviews",
-  "namespace": "streams",
+  "namespace": "com.example",
   "fields": [
     {
       "name": "id",
@@ -24,32 +24,26 @@
     {
       "name": "categories",
       "type": {
-        "type": "array",
-        "items": "string"
-      },
-      "arg.properties": {
-        "options": [
-          ["Hotels", "Resorts", "Lodging"],
-          ["Hotels", "Bed & Breakfast", "Inns"],
-          ["Hotels", "Suites", "Extended Stay"],
-          ["Hotels", "Banquet facilities", "Corporate Lodging"],
-          ["Hotels", "Motels", "Lodging"],
-          ["Business Hotels", "Conference Room", "Golf Courses"],
-          ["Tourist Hotels", "Family-friendly Hotels", "Weekend Gateway Hotels"]
-        ]
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "Hotels|Resorts|Lodging", 
+            "Bed & Breakfast|Inns|Suites", 
+            "Extended Stay|Banquet facilities|Corporate Lodging",
+            "Business Hotels|Conference Room|Golf Courses",
+            "Tourist Hotels|Family-friendly Hotels", 
+            "Weekend Gateway Hotels|Motels"
+          ]
+        }
       }
     },
     {
       "name": "primary_categories",
       "type": {
-        "type": "array",
-        "items": "string"
-      },
-      "arg.properties": {
-        "options": [
-          ["Accommodation & Food Services"],
-          ["Travel & Tourism"]
-        ]
+        "type": "string",
+        "arg.properties": {
+          "options": ["Accommodation & Food Services", "Travel & Tourism"]
+        }
       }
     },
     {
@@ -102,7 +96,36 @@
       "type": {
         "type": "string",
         "arg.properties": {
-          "options": ["Grand Plaza Hotel", "Seaside Resort", "Central Park Suites", "Sunrise Inn", "Metropolitan Lodge"]
+          "options": ["Grand Plaza Hotel", 
+            "Seaside Resort", 
+            "Central Park Suites", 
+            "Sunrise Inn", 
+            "Metropolitan Lodge",
+            "Admiral Hotel",
+            "Best Western",
+            "Chelsea Savoy Hotel",
+            "Daytona Shores Inn And Suites",
+            "Empress Hotel",
+            "Fairfield Inn & Suites Naples",
+            "Hampton Inn Brentwood",
+            "King Charles Inn",
+            "La Quinta Inn Norfolk Virginia Beach",
+            "Magnuson Hotel Nashville North",
+            "NYLO Plano at Legacy",
+            "Omni Royal Orleans",
+            "Pier 5 Hotel Baltimore",
+            "Quality Inn",
+            "Ramada Flagstaff East",
+            "Sheraton Kansas City Hotel at Crown Center",
+            "The Boxer",
+            "The Chateau Motel",
+            "The Restoration",
+            "The St. Regis New York",
+            "The Westin Las Vegas Hotel & Spa",
+            "W Boston",
+            "Wild River Inn",
+            "Wyndham Garden San Jose Silicon Valley"
+          ]
         }
       }
     },
@@ -120,17 +143,20 @@
       "type": {
         "type": "string",
         "arg.properties": {
-          "options": ["CA", "NY", "IL", "FL", "NV"]
+          "options": ["CA", "NY", "IL", "FL", 
+            "NV", "AK", "DE", "GA", "HI", "IL",
+            "LA", "MD", "MO", "NJ", "NV", "OR",
+            "PA", "SC", "TX", "VA"
+          ]
         }
       }
     },
     {
       "name": "reviews_date",
       "type": {
-        "type": "long",
-        "logicalType": "timestamp-millis",
+        "type": "string",
         "arg.properties": {
-          "range": { "min": 1009843200000, "max": 1546291199000 }
+          "regex": "20(0[2-9]|1[0-8])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z"
         }
       }
     },
@@ -172,7 +198,9 @@
       "type": {
         "type": "string",
         "arg.properties": {
-          "options": ["Seattle", "Austin", "Boston", "Denver", "Atlanta"]
+          "options": ["Seattle", "Austin", "Boston", "Denver", "Atlanta", "Alaska",
+            "Minneapolis", "New Zealand", "Houston", "Phoenix", "Tucson", "San Diego"
+          ]
         }
       }
     },
@@ -181,7 +209,7 @@
       "type": {
         "type": "string",
         "arg.properties": {
-          "regex": "(Anonymous|[A-Za-z][A-Za-z0-9]+)"
+          "regex": "(Anonymous|[A-Za-z]{4,8} [A-Za-z0-9]+)"
         }
       }
     }

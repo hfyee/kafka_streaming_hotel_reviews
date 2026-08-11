@@ -1,17 +1,23 @@
 -- raw event stream 
+-- DROP STREAM IF EXISTS reviews_stream_bronze;
 CREATE STREAM IF NOT EXISTS reviews_stream_bronze (
     id VARCHAR KEY,
     address VARCHAR,
-    categories ARRAY<STRING>,
-    primary_categories ARRAY<STRING>,
+    --categories ARRAY<STRING>,
+    categories VARCHAR,
+    --primary_categories ARRAY<STRING>,
+    primary_categories VARCHAR,
     city VARCHAR,
     country VARCHAR,
-    latitude DECIMAL(9,6),
-    longitude DECIMAL(9,6),
+    --latitude DECIMAL(9,6),
+    latitude DOUBLE,
+    --longitude DECIMAL(9,6),
+    longitude DOUBLE,
     name VARCHAR,
     postal_code VARCHAR,
     province VARCHAR,
-    reviews_date TIMESTAMP,
+    --reviews_date TIMESTAMP,
+    reviews_date VARCHAR,
     reviews_rating INT,
     reviews_text VARCHAR,
     reviews_title VARCHAR,
@@ -23,6 +29,7 @@ CREATE STREAM IF NOT EXISTS reviews_stream_bronze (
 );
 
 -- filtered event stream
+-- DROP STREAM IF EXISTS reviews_stream_silver;
 CREATE STREAM IF NOT EXISTS reviews_stream_silver AS 
 SELECT
     id AS hotel_id,
@@ -48,6 +55,7 @@ WHERE id IS NOT NULL
     AND reviews_text IS NOT NULL;
 
 -- materialised state table derived from silver stream
+-- DROP TABLE IF EXISTS hotel_summary_gold;
 CREATE TABLE IF NOT EXISTS hotel_summary_gold AS 
 SELECT
     hotel_id,
