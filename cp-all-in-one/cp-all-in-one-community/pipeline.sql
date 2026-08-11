@@ -43,7 +43,8 @@ SELECT
     name AS hotel_name,
     SUBSTRING(postal_code, 1, 5) AS postal_code, -- the first 5 digits of the postal code
     province AS state,
-    CAST(reviews_date AS DATE) AS reviews_date, -- from TIMESTAMP
+    --CAST(reviews_date AS DATE) AS reviews_date, -- from TIMESTAMP
+    reviews_date,
     reviews_rating,
     reviews_text,
     reviews_title,
