@@ -3,6 +3,7 @@ Coursework for NYP PDC in Enterprise Data Management (2026)
 
 ## Dataflow
 
+```
               Kafka Protocol               Kafka Protocol
 +--------------+   produce   +--------------+   consume   +-------------+
 | ksql-datagen | ----------> | Kafka Broker | ----------> |   ksqlDB    |
@@ -10,3 +11,4 @@ Coursework for NYP PDC in Enterprise Data Management (2026)
                                       ^
                                       |
                               Kafka Topic
+```
