@@ -34,7 +34,8 @@ CREATE STREAM IF NOT EXISTS reviews_stream_silver AS
 SELECT
     id AS hotel_id,
     address,
-    categories,
+    --categories,
+    SPLIT(categories, '|') AS categories, -- Converts "A|B|C" to ["A", "B", "C"]
     primary_categories,
     city,
     country,
