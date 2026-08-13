@@ -36,24 +36,22 @@ CREATE STREAM IF NOT EXISTS reviews_stream_bronze (
 CREATE STREAM IF NOT EXISTS reviews_stream_silver AS 
 SELECT
     id AS hotel_id,
-    address,
+    name AS hotel_name,
     --categories,
     SPLIT(categories, '|') AS categories, -- Converts "A|B|C" to ["A", "B", "C"]
-    primary_categories,
     city,
-    country,
+    province AS state,
+    SUBSTRING(postal_code, 1, 5) AS postal_code, -- the first 5 digits of the postal code
+    address,
     latitude,
     longitude,
-    name AS hotel_name,
-    SUBSTRING(postal_code, 1, 5) AS postal_code, -- the first 5 digits of the postal code
-    province AS state,
     --CAST(reviews_date AS DATE) AS reviews_date, -- from TIMESTAMP
     reviews_date,
+    reviews_title,
     reviews_rating,
     reviews_text,
-    reviews_title,
-    reviews_user_city,
-    reviews_username
+    reviews_username,
+    reviews_user_city
 FROM reviews_stream_bronze
 WHERE id IS NOT NULL 
     AND reviews_rating IS NOT NULL 

@@ -54,21 +54,51 @@ WITH (
 ) AS
 SELECT 
     `id` AS hotel_id,
-    `address` AS address,
+    `name` AS hotel_name,
     `categories` AS categories,
-    `primaryCategories` AS primary_categories,
     `city` AS city,
+    `province` AS state,
+    `postalCode` AS postal_code,
+    `address` AS address,
     `latitude` AS latitude,
     `longitude` AS longitude,
-    `name` AS hotel_name,
-    `postalCode` AS postal_code,
-    `province` AS province,
     `reviews.date` AS reviews_date,
+    `reviews.title` AS reviews_title,
     CAST(`reviews.rating` AS INT) AS reviews_rating,
     `reviews.text` AS reviews_text,
-    `reviews.title` AS reviews_title,
-    `reviews.userCity` AS reviews_user_city,
-    `reviews.username` AS reviews_username
+    `reviews.username` AS reviews_username,
+    `reviews.userCity` AS reviews_user_city
 FROM reviews_csv_raw
 WHERE `id` IS NOT NULL
+EMIT CHANGES;
+
+CREATE TABLE city_review_stats AS
+SELECT 
+    hotel_id,
+    hotel_name,
+    city,
+    state,
+    postal_code,
+    COUNT(*) AS total_reviews,
+    ROUND(AVG(CAST(reviews_rating AS DOUBLE)), 2) AS avg_rating,
+    MIN(reviews_date) AS earliest_review_date,
+    MAX(reviews_date) AS latest_review_date
+FROM reviews_csv_silver
+GROUP BY 
+    hotel_id,
+    hotel_name,
+    city,
+    state,
+    postal_code
+EMIT CHANGES;
+
+CREATE TABLE city_review_stats AS
+SELECT 
+    hotel_id,
+    COUNT(*) AS total_reviews,
+    ROUND(AVG(CAST(reviews_rating AS DOUBLE)), 2) AS avg_rating,
+    MIN(reviews_date) AS earliest_review_date,
+    MAX(reviews_date) AS latest_review_date
+FROM reviews_csv_silver
+GROUP BY hotel_id
 EMIT CHANGES;
