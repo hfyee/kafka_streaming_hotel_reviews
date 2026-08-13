@@ -75,26 +75,6 @@ EMIT CHANGES;
 CREATE TABLE city_review_stats AS
 SELECT 
     hotel_id,
-    hotel_name,
-    city,
-    state,
-    postal_code,
-    COUNT(*) AS total_reviews,
-    ROUND(AVG(CAST(reviews_rating AS DOUBLE)), 2) AS avg_rating,
-    MIN(reviews_date) AS earliest_review_date,
-    MAX(reviews_date) AS latest_review_date
-FROM reviews_csv_silver
-GROUP BY 
-    hotel_id,
-    hotel_name,
-    city,
-    state,
-    postal_code
-EMIT CHANGES;
-
-CREATE TABLE city_review_stats AS
-SELECT 
-    hotel_id,
     COUNT(*) AS total_reviews,
     ROUND(AVG(CAST(reviews_rating AS DOUBLE)), 2) AS avg_rating,
     MIN(reviews_date) AS earliest_review_date,
