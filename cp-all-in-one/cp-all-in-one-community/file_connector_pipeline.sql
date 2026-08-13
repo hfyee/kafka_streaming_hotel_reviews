@@ -3,6 +3,8 @@ DROP CONNECTOR IF EXISTS csv_file_source;
 DROP STREAM IF EXISTS reviews_csv_silver;
 DROP STREAM IF EXISTS reviews_csv_raw;
 
+-- Add 'csv.escape.char' so embedded quotes and line breaks inside review text are handled correctly
+-- ASCII 44 is comma and ASCII 34 is double-quote "
 CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
   'connector.class'               = 'com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector',
   'tasks.max'                     = '1',
@@ -13,6 +15,8 @@ CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
   'input.file.pattern'            = '(?i)^hotel_reviews.*\.csv$',
   'halt.on.error'                 = 'false',
   'csv.first.row.as.header'       = 'true',
+  'csv.separator.char'            = '44',
+  'csv.quote.char'                = '34',
   'schema.generation.enabled'     = 'true',
   'schema.generation.key.fields'  = 'id',
   'key.converter'                 = 'org.apache.kafka.connect.storage.StringConverter',
@@ -20,35 +24,51 @@ CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
   'value.converter.schemas.enable'= 'false'
 );
 
+-- Backticks to force ksqlDB to treat the string literally — incl. any invisible hidden characters.
 CREATE STREAM IF NOT EXISTS reviews_csv_raw (
-    value VARCHAR
+    `id` VARCHAR,
+    `address` VARCHAR,
+    `categories` VARCHAR,
+    `primaryCategories` VARCHAR,
+    `city` VARCHAR,
+    `country` VARCHAR,
+    `latitude` DOUBLE,
+    `longitude` DOUBLE,
+    `name` VARCHAR,
+    `postalCode` VARCHAR,
+    `province` VARCHAR,
+    `reviews.date` VARCHAR,
+    `reviews.rating` INT,
+    `reviews.text` VARCHAR,
+    `reviews.title` VARCHAR,
+    `reviews.userCity` VARCHAR,
+    `reviews.username` VARCHAR
 ) WITH (
     KAFKA_TOPIC='US_hotel_reviews_csv',
-    VALUE_FORMAT='KAFKA',
-    PARTITIONS=1
+    VALUE_FORMAT='JSON'
 );
 
-CREATE STREAM IF NOT EXISTS reviews_csv_silver WITH (
-  VALUE_FORMAT='JSON' 
+CREATE STREAM IF NOT EXISTS reviews_csv_silver 
+WITH (
+    VALUE_FORMAT='JSON'
 ) AS
 SELECT 
-    SPLIT(value, ',')[1] AS hotel_id,
-    SPLIT(value, ',')[2] AS address,
-    SPLIT(value, ',')[3] AS categories,
-    SPLIT(value, ',')[4] AS primary_categories,
-    SPLIT(value, ',')[5] AS city,
-    SPLIT(value, ',')[6] AS country,
-    CAST(SPLIT(value, ',')[7] AS DOUBLE) AS latitude,
-    CAST(SPLIT(value, ',')[8] AS DOUBLE) AS longitude,
-    SPLIT(value, ',')[9] AS hotel_name,
-    SPLIT(value, ',')[10] AS postal_code,
-    SPLIT(value, ',')[11] AS province,
-    SPLIT(value, ',')[12] AS reviews_date,
-    CAST(SPLIT(value, ',')[13] AS INT) AS reviews_rating,
-    SPLIT(value, ',')[14] AS reviews_text,
-    SPLIT(value, ',')[15] AS reviews_title,
-    SPLIT(value, ',')[16] AS reviews_user_city,
-    SPLIT(value, ',')[17] AS reviews_username
+    `id` AS hotel_id,
+    `address` AS address,
+    `categories` AS categories,
+    `primaryCategories` AS primary_categories,
+    `city` AS city,
+    `latitude` AS latitude,
+    `longitude` AS longitude,
+    `name` AS hotel_name,
+    `postalCode` AS postal_code,
+    `province` AS province,
+    `reviews.date` AS reviews_date,
+    CAST(`reviews.rating` AS INT) AS reviews_rating,
+    `reviews.text` AS reviews_text,
+    `reviews.title` AS reviews_title,
+    `reviews.userCity` AS reviews_user_city,
+    `reviews.username` AS reviews_username
 FROM reviews_csv_raw
-WHERE SPLIT(value, ',')[1] != 'id' -- Skip CSV header row if present
+WHERE `id` IS NOT NULL
 EMIT CHANGES;
