@@ -4,6 +4,7 @@ DROP STREAM IF EXISTS reviews_csv_silver;
 DROP STREAM IF EXISTS reviews_csv_raw;
 
 -- Backticks to force ksqlDB to treat the string literally — incl. any invisible hidden characters.
+-- Need PARTITIONS parameter in the WITH clause for ksqlDB to create the topic.
 CREATE STREAM IF NOT EXISTS reviews_csv_raw (
     `id` VARCHAR,
     `address` VARCHAR,
