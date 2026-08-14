@@ -3,27 +3,6 @@ DROP CONNECTOR IF EXISTS csv_file_source;
 DROP STREAM IF EXISTS reviews_csv_silver;
 DROP STREAM IF EXISTS reviews_csv_raw;
 
--- Add 'csv.escape.char' so embedded quotes and line breaks inside review text are handled correctly
--- ASCII 44 is comma and ASCII 34 is double-quote "
-CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
-  'connector.class'               = 'com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector',
-  'tasks.max'                     = '1',
-  'topic'                         = 'US_hotel_reviews_csv',
-  'input.path'                    = '/file-data',
-  'finished.path'                 = '/file-data/finished',
-  'error.path'                    = '/file-data/error',
-  'input.file.pattern'            = '(?i)^hotel_reviews.*\.csv$',
-  'halt.on.error'                 = 'false',
-  'csv.first.row.as.header'       = 'true',
-  'csv.separator.char'            = '44',
-  'csv.quote.char'                = '34',
-  'schema.generation.enabled'     = 'true',
-  'schema.generation.key.fields'  = 'id',
-  'key.converter'                 = 'org.apache.kafka.connect.storage.StringConverter',
-  'value.converter'               = 'org.apache.kafka.connect.json.JsonConverter',
-  'value.converter.schemas.enable'= 'false'
-);
-
 -- Backticks to force ksqlDB to treat the string literally — incl. any invisible hidden characters.
 CREATE STREAM IF NOT EXISTS reviews_csv_raw (
     `id` VARCHAR,
@@ -45,7 +24,29 @@ CREATE STREAM IF NOT EXISTS reviews_csv_raw (
     `reviews.username` VARCHAR
 ) WITH (
     KAFKA_TOPIC='US_hotel_reviews_csv',
-    VALUE_FORMAT='JSON'
+    VALUE_FORMAT='JSON',
+    PARTITIONS = 1
+);
+
+-- Add 'csv.escape.char' so embedded quotes and line breaks inside review text are handled correctly
+-- ASCII 44 is comma and ASCII 34 is double-quote "
+CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
+  'connector.class'               = 'com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector',
+  'tasks.max'                     = '1',
+  'topic'                         = 'US_hotel_reviews_csv',
+  'input.path'                    = '/file-data',
+  'finished.path'                 = '/file-data/finished',
+  'error.path'                    = '/file-data/error',
+  'input.file.pattern'            = '(?i)^hotel_reviews.*\.csv$',
+  'halt.on.error'                 = 'false',
+  'csv.first.row.as.header'       = 'true',
+  'csv.separator.char'            = '44',
+  'csv.quote.char'                = '34',
+  'schema.generation.enabled'     = 'true',
+  'schema.generation.key.fields'  = 'id',
+  'key.converter'                 = 'org.apache.kafka.connect.storage.StringConverter',
+  'value.converter'               = 'org.apache.kafka.connect.json.JsonConverter',
+  'value.converter.schemas.enable'= 'false'
 );
 
 CREATE STREAM IF NOT EXISTS reviews_csv_silver 
