@@ -77,11 +77,15 @@ SELECT * FROM reviews_csv_raw EMIT CHANGES LIMIT 10;
 SELECT COUNT(*) FROM reviews_csv_raw GROUP BY 1 EMIT CHANGES;
 SELECT `id`, `name`, `city`, `reviews.title`, `reviews.username`, `reviews.rating` FROM reviews_csv_raw EMIT CHANGES LIMIT 10;
 ### Check filtered/cleaned silver stream:
-SELECT hotel_id, hotel_name, postal_code, reviews_title, reviews_username, reviews_rating FROM reviews_csv_silver EMIT CHANGES LIMIT 10;
+SELECT hotel_id, hotel_name, postal_code, reviews_title, reviews_username, reviews_rating FROM reviews_csv_keyed EMIT CHANGES LIMIT 10;
 ### Query the aggregated materialized table:
 SELECT * FROM city_review_stats 
 WHERE total_reviews > 50 AND avg_rating > 3.0
 ORDER BY avg_rating DESC
+EMIT CHANGES LIMIT 10;
+
+SELECT * FROM hotel_reviews_stats 
+WHERE total_reviews > 50 AND avg_rating > 3.0
 EMIT CHANGES LIMIT 10;
 
 # Misc

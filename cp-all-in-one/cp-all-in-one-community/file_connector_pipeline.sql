@@ -1,6 +1,7 @@
 -- Drop stream sequence matters due to dependencies
 DROP CONNECTOR IF EXISTS csv_file_source;
-DROP STREAM IF EXISTS reviews_csv_silver;
+DROP TABLE IF EXISTS hotel_reviews_stats;
+DROP STREAM IF EXISTS reviews_csv_keyed;
 DROP STREAM IF EXISTS reviews_csv_raw;
 
 -- Backticks to force ksqlDB to treat the string literally — incl. any invisible hidden characters.
@@ -50,9 +51,13 @@ CREATE SOURCE CONNECTOR IF NOT EXISTS csv_file_source WITH (
   'value.converter.schemas.enable'= 'false'
 );
 
-CREATE STREAM IF NOT EXISTS reviews_csv_silver 
+-- To compress multiple reviews per hotel into a unique list of hotels, 
+-- create a stream with a primary key defined
+CREATE STREAM IF NOT EXISTS reviews_csv_keyed
 WITH (
-    VALUE_FORMAT='JSON'
+    KAFKA_TOPIC='US_hotel_reviews_keyed',
+    VALUE_FORMAT='JSON',
+    KEY_FORMAT='KAFKA'
 ) AS
 SELECT 
     `id` AS hotel_id,
@@ -62,8 +67,6 @@ SELECT
     `province` AS state,
     `postalCode` AS postal_code,
     `address` AS address,
-    `latitude` AS latitude,
-    `longitude` AS longitude,
     `reviews.date` AS reviews_date,
     `reviews.title` AS reviews_title,
     CAST(`reviews.rating` AS INT) AS reviews_rating,
@@ -72,15 +75,20 @@ SELECT
     `reviews.userCity` AS reviews_user_city
 FROM reviews_csv_raw
 WHERE `id` IS NOT NULL
-EMIT CHANGES;
+PARTITION BY `id`;
 
-CREATE TABLE city_review_stats AS
+-- Materialise as a table (keeps only the latest record per hotel id)
+CREATE TABLE hotel_reviews_stats AS
 SELECT 
     hotel_id,
+    LATEST_BY_OFFSET(hotel_name) AS hotel_name,
+    LATEST_BY_OFFSET(city) AS city,
+    LATEST_BY_OFFSET(state) AS state,
+    LATEST_BY_OFFSET(postal_code) AS postal_code,
     COUNT(*) AS total_reviews,
     ROUND(AVG(CAST(reviews_rating AS DOUBLE)), 2) AS avg_rating,
     MIN(reviews_date) AS earliest_review_date,
     MAX(reviews_date) AS latest_review_date
-FROM reviews_csv_silver
+FROM reviews_csv_keyed
 GROUP BY hotel_id
 EMIT CHANGES;
