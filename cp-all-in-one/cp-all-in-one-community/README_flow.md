@@ -8,7 +8,7 @@ File structure:
 |-file_connector_pipeline.sql
 |-reviews_schema.json
 |-connect-plugins
-|-data
+|-data/Hotel_Reviews.csv
 |-finished
 |-error
 ```
