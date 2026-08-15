@@ -1,4 +1,5 @@
 # Folder structure
+```
 Working dir: ~/NYP_EDM/ITG201/assignment/kafka_streaming_hotel_reviews
 
 File structure:
@@ -10,6 +11,7 @@ File structure:
 |-data
 |-finished
 |-error
+```
 
 # Setup 1: Confluent Kafka Community (ksqlDB)
 //docker exec -it confluent-test bash
