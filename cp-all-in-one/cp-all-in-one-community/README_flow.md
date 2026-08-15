@@ -19,14 +19,6 @@ Clone the Confluent All-in-One GitHub repo at https://github.com/confluentinc/cp
 Go to working folder cp-all-in-one/cp-all-in-one-community.
 
 ## Terminal 1 ("datagen") 
-ksql-datagen \
-  schema=./reviews_schema.json \
-  key=id \
-  topic=US_hotel_reviews \
-  format=json \
-  bootstrap-server=localhost:9092 \
-  msgRate=1
-### via temp Docker container
 docker compose exec ksqldb-server \
   ksql-datagen \
   schema=/ksql-scripts/reviews_schema.json \
@@ -94,14 +86,9 @@ SELECT `id`, `name`, `city`, `reviews.title`, `reviews.username`, `reviews.ratin
 ### Check filtered/cleaned silver stream:
 SELECT hotel_id, hotel_name, postal_code, reviews_title, reviews_username, reviews_rating FROM reviews_csv_keyed EMIT CHANGES LIMIT 10;
 ### Query the aggregated materialized table:
-SELECT * FROM city_review_stats 
-WHERE total_reviews > 50 AND avg_rating > 3.0
-ORDER BY avg_rating DESC
-EMIT CHANGES LIMIT 10;
-
+SET 'auto.offset.reset' = 'latest';
 SELECT * FROM hotel_reviews_stats 
-WHERE total_reviews > 50 AND avg_rating > 3.0
-EMIT CHANGES LIMIT 10;
+WHERE total_reviews > 50 AND avg_rating > 3.0;
 
 # Misc
 
