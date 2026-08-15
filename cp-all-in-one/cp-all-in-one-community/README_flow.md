@@ -1,3 +1,16 @@
+# Folder structure
+Working dir: ~/NYP_EDM/ITG201/assignment/kafka_streaming_hotel_reviews
+
+File structure:
+|-docker-compose.yml
+|-datagen_pipeline.sql
+|-file_connector_pipeline.sql
+|-reviews_schema.json
+|-connect-plugins
+|-data
+|-finished
+|-error
+
 # Setup 1: Confluent Kafka Community (ksqlDB)
 //docker exec -it confluent-test bash
 Clone the Confluent All-in-One GitHub repo at https://github.com/confluentinc/cp-all-in-one/tree/8.2.0-post
