@@ -1,6 +1,6 @@
 # Folder structure
 ```
-Working dir: ~/NYP_EDM/ITG201/assignment/kafka_streaming_hotel_reviews
+Working dir: ~/NYP_EDM/ITG201/assignment/kafka_streaming_hotel_reviews/cp-all-in-one-community
 
 File structure:
 |-docker-compose.yml
