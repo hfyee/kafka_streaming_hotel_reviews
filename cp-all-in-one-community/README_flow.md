@@ -102,9 +102,9 @@ docker compose logs connect | grep -E "ERROR|EXCEPTION|SpoolDir" | tail -n 25
 docker compose exec connect kafka-topics --bootstrap-server broker:29092 --delete --topic US_hotel_reviews_csv
 
 ## Sourcing SQL scripts
-## Your running background ksqldb-server container doesn't have your host file mounted.
-## If you want your local SQL files to always be available inside the running ksqldb-server container, 
-## mount the local directory in your docker-compose.yml file under the ksqldb-server service
+Your running background ksqldb-server container doesn't have your host file mounted.
+If you want your local SQL files to always be available inside the running ksqldb-server container, 
+mount the local directory in your docker-compose.yml file under the ksqldb-server service
 
 ## Docker
 docker compose up -d
