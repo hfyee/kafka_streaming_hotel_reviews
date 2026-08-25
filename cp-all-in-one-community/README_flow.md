@@ -1,7 +1,5 @@
 # Folder structure
 ```
-Working dir: ~/NYP_EDM/ITG201/assignment/kafka_streaming_hotel_reviews/cp-all-in-one-community
-
 File structure:
 |-docker-compose.yml
 |-datagen_pipeline.sql
@@ -14,7 +12,6 @@ File structure:
 ```
 
 # Setup 1: Confluent Kafka Community (ksqlDB)
-//docker exec -it confluent-test bash
 Clone the Confluent All-in-One GitHub repo at https://github.com/confluentinc/cp-all-in-one/tree/8.2.0-post
 Go to working folder cp-all-in-one/cp-all-in-one-community.
 
@@ -71,8 +68,6 @@ ksql> RUN SCRIPT '/ksql-scripts/file_connector_pipeline.sql';
 
 ### Prelim checks
 SHOW CONNECTORS;
-// or from terminal
-curl -s http://localhost:8083/connectors/csv_file_source/status
 // if status is FAILED
 curl -s http://localhost:8083/connectors/CSV_FILE_SOURCE/status | jq
 ksql> SET 'auto.offset.reset' = 'earliest';
@@ -105,17 +100,3 @@ docker compose exec connect kafka-topics --bootstrap-server broker:29092 --delet
 Your running background ksqldb-server container doesn't have your host file mounted.
 If you want your local SQL files to always be available inside the running ksqldb-server container, 
 mount the local directory in your docker-compose.yml file under the ksqldb-server service
-
-## Docker
-docker compose up -d
-docker compose ps
-docker compose down
-docker compose down && docker compose up -d
-## restart only the connect container
-docker compose up -d --force-recreate connect
-### Check for specific docker image
-docker image ls | grep confluentinc
-docker image ls confluentinc/cp-kafka-connect
-docker image inspect confluentinc/cp-ksqldb-cli:8.2.0
-### Remove a docker image
-docker image rm confluentinc/cp-kafka-connect:latest
