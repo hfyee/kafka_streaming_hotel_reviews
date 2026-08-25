@@ -1,4 +1,4 @@
-# Coursework for NYP PDC in Enterprise Data Management (2026)
+# Demo real-time streaming using Kafka on hotel reviews dataset
 
 * Synthetic random data generation using ksql-datagen
 
